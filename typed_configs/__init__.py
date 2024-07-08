@@ -1,5 +1,5 @@
 import sys
-from dataclasses import Field, fields, is_dataclass
+from dataclasses import fields, is_dataclass
 from types import NoneType
 from typing import (
     Any,
