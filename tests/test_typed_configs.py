@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -25,6 +27,10 @@ class Config:
     prop2: int = 3
     prop3: float = 1.0
     prop4: Optional[int] = None
+
+    @staticmethod
+    def some_factory_method(a: int) -> Config:
+        return Config(SubConfigA(), SubConfigB(), prop1="a")
 
 
 def test__no_default_value__not_set__raises_exception() -> None:

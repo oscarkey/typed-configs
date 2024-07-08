@@ -1,7 +1,16 @@
 import sys
 from dataclasses import Field, fields, is_dataclass
 from types import NoneType
-from typing import Any, Iterator, Literal, TypeVar, Union, get_args, get_origin
+from typing import (
+    Any,
+    Iterator,
+    Literal,
+    TypeVar,
+    Union,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 
 class ArgumentParseError(Exception):
@@ -37,7 +46,8 @@ def _split_keys_values(args: list[str]) -> Iterator[tuple[str, str]]:
 def _parse(config: type[C], args: UnparsedArgs) -> C:
     if not is_dataclass(config):
         raise ValueError
-    expected_fields = {f.name: f for f in fields(config)}
+    field_types = get_type_hints(config)
+    expected_fields = {f.name: field_types[f.name] for f in fields(config)}
 
     parsed_args: dict[str, Any] = {}
 
@@ -48,7 +58,7 @@ def _parse(config: type[C], args: UnparsedArgs) -> C:
     this_config_args = [(k, v) for k, v in args if "." not in k]
     for k, v in this_config_args:
         try:
-            parsed_args[k] = _parse_value(expected_fields[k].type, v)
+            parsed_args[k] = _parse_value(expected_fields[k], v)
         except ArgumentParseError as e:
             raise ValueError(f"Could not parse argument '{k}={v}' as '{e.t}'")
         except UnknownTypeError as e:
@@ -58,11 +68,11 @@ def _parse(config: type[C], args: UnparsedArgs) -> C:
 
 
 def _get_expected_sub_configs(
-    expected_fields: dict[str, Field]
+    expected_fields: dict[str, Any]
 ) -> Iterator[tuple[str, Any]]:
-    for field_name, field in expected_fields.items():
-        if is_dataclass(field.type):
-            yield field_name, field.type
+    for field_name, field_type in expected_fields.items():
+        if is_dataclass(field_type):
+            yield field_name, field_type
 
 
 def _find_args_for_sub_config(name: str, args: UnparsedArgs) -> UnparsedArgs:
