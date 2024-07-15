@@ -100,5 +100,15 @@ def test__value_not_valid__raises_exception() -> None:
         _parse("prop1=g sub_config_a.prop1=(1.0,1.0)")
 
 
+def test__non_existent_property__raises_exception() -> None:
+    with pytest.raises(KeyError):
+        _parse("prop1=2 doesntexist=3")
+
+
+def test__non_existent_subclass__raises_exception() -> None:
+    with pytest.raises(KeyError):
+        _parse("prop1=2 doesntexist.a=3")
+
+
 def _parse(args: str) -> Config:
     return typed_configs.parse(Config, args=["script.py"] + args.split(" "))

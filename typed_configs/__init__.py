@@ -51,11 +51,15 @@ def _parse(config: type[C], args: UnparsedArgs) -> C:
 
     parsed_args: dict[str, Any] = {}
 
+    sub_config_names = []
     for sub_config_name, sub_config in _get_expected_sub_configs(expected_fields):
         sub_config_args = _find_args_for_sub_config(sub_config_name, args)
         parsed_args[sub_config_name] = _parse(sub_config, sub_config_args)
+        sub_config_names.append(sub_config_name)
 
-    this_config_args = [(k, v) for k, v in args if "." not in k]
+    this_config_args = [
+        (k, v) for k, v in args if k.split(".")[0] not in sub_config_names
+    ]
     for k, v in this_config_args:
         try:
             parsed_args[k] = _parse_value(expected_fields[k], v)
