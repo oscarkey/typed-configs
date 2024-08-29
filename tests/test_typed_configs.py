@@ -77,12 +77,12 @@ def test__optional__none__parses_to_None() -> None:
 
 def test__tuple__fully_specified__parses_correctly() -> None:
     config = _parse("prop1=h sub_config_a.prop1=(4,20.)")
-    config.sub_config_a.prop1 == (4, 20.0)
+    assert config.sub_config_a.prop1 == (4, 20.0)
 
 
 def test__tuple__variable_length__parses_correctly() -> None:
-    config = _parse("prop1=h sub_config_a.prop2=(10,20,40,50)")
-    config.sub_config_a.prop2 == (10, 20, 40, 50)
+    config = _parse("prop1=h sub_config_a.prop2=(a,b,50,three)")
+    assert config.sub_config_a.prop2 == ("a", "b", "50", "three")
 
 
 def test__value_not_valid__raises_exception() -> None:
