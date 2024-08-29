@@ -1,6 +1,6 @@
 import sys
 from dataclasses import fields, is_dataclass
-from types import NoneType
+from types import NoneType, UnionType
 from typing import (
     Any,
     Iterator,
@@ -99,7 +99,7 @@ def _parse_value(expected_type: Any, v: str) -> Any:
         else:
             raise ArgumentParseError(v, expected_type)
 
-    if get_origin(expected_type) == Union:
+    if get_origin(expected_type) in [Union, UnionType]:
         return _parse_union(expected_type, v)
 
     if get_origin(expected_type) == tuple:

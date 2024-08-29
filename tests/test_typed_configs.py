@@ -27,6 +27,7 @@ class Config:
     prop2: int = 3
     prop3: float = 1.0
     prop4: Optional[int] = None
+    prop5: int | None = None
 
     @staticmethod
     def some_factory_method(a: int) -> Config:
@@ -73,6 +74,12 @@ def test__optional__not_none__parses_to_value() -> None:
 def test__optional__none__parses_to_None() -> None:
     assert _parse("prop1=h prop4=none").prop4 is None
     assert _parse("prop1=h prop4=None").prop4 is None
+
+
+def test__union_bar_type__parses_correctly() -> None:
+    # The new "None | int" syntax for unions added in Python 3.10
+    assert _parse("prop1=h prop5=None").prop5 is None
+    assert _parse("prop1=h prop5=8").prop5 == 8
 
 
 def test__tuple__fully_specified__parses_correctly() -> None:
