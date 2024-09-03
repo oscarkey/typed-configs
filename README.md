@@ -1,8 +1,7 @@
 # typed-configs
 A simple config system where you define your config using dataclasses with defaults, and then can specify overrides on the command line.
 
-There are lots of existing options for this (e.g. [typed-argument-parser](https://github.com/swansonk14/typed-argument-parser), [Hydra](https://hydra.cc/docs/tutorials/structured_config/intro/)). None of them were quite right for me, so I wrote my own as a procrastination activity.
-The implementation might be naive.
+There are lots of existing options for this (e.g. [typed-argument-parser](https://github.com/swansonk14/typed-argument-parser), [Hydra](https://hydra.cc/docs/tutorials/structured_config/intro/)). None of them were quite right for me, so I wrote my own.
 
 
 ## Features
@@ -32,7 +31,7 @@ if __name__ == "__main__":
     main(typed_configs.parse(Config))
 ```
 
-Then to override: `python script.py option1=5 subconfig.option=(1,2)`
+Then, you can override options on the command line: `python script.py option1=5 subconfig.option=(1,2)`
 
 
 ## Dev
